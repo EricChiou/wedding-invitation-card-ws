@@ -2,11 +2,14 @@ package apply
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 
+	"../constants"
 	"../database"
 	"../router"
 	"../util"
+	"../vo"
 )
 
 // INIT initial api
@@ -22,35 +25,35 @@ func add(context *router.Context) {
 	body, err := ioutil.ReadAll(context.Req.Body)
 	defer context.Req.Body.Close()
 	if err != nil {
-		context.Res.Write([]byte(util.ResultHandler(util.Result.FormatError, "no have req body")))
+		context.Res.Write([]byte(util.ResultHandler(cons.Result.FormatError, "no have req body")))
 		return
 	}
 
-	var applicant Applicant
+	var applicant vo.Applicant
 	err = json.Unmarshal(body, &applicant)
 	if err != nil {
-		context.Res.Write([]byte(util.ResultHandler(util.Result.FormatError, "json parser fail")))
+		context.Res.Write([]byte(util.ResultHandler(cons.Result.FormatError, "json parser fail")))
 		return
 	}
 
 	if len(applicant.Name) == 0 {
-		context.Res.Write([]byte(util.ResultHandler(util.Result.FormatError, "沒輸入姓名")))
+		context.Res.Write([]byte(util.ResultHandler(cons.Result.FormatError, "沒輸入姓名")))
 		return
 	}
 	if applicant.Number <= 0 {
-		context.Res.Write([]byte(util.ResultHandler(util.Result.FormatError, "沒輸入人數")))
+		context.Res.Write([]byte(util.ResultHandler(cons.Result.FormatError, "沒輸入人數")))
 		return
 	}
 	if len(applicant.Phone) == 0 && len(applicant.Email) == 0 && len(applicant.Line) == 0 {
-		context.Res.Write([]byte(util.ResultHandler(util.Result.FormatError, "沒輸入聯絡方式")))
+		context.Res.Write([]byte(util.ResultHandler(cons.Result.FormatError, "沒輸入聯絡方式")))
 		return
 	}
 	if len(applicant.Relation) == 0 {
-		context.Res.Write([]byte(util.ResultHandler(util.Result.FormatError, "沒輸入與新人關係")))
+		context.Res.Write([]byte(util.ResultHandler(cons.Result.FormatError, "沒輸入與新人關係")))
 		return
 	}
 	if applicant.Card && len(applicant.Address) == 0 {
-		context.Res.Write([]byte(util.ResultHandler(util.Result.FormatError, "沒輸入寄送地址")))
+		context.Res.Write([]byte(util.ResultHandler(cons.Result.FormatError, "沒輸入寄送地址")))
 		return
 	}
 
@@ -66,10 +69,11 @@ func add(context *router.Context) {
 		applicant.Address,
 		applicant.Other)
 	if err != nil {
-		context.Res.Write([]byte(util.ResultHandler(util.Result.DBError, "insert db fail")))
+		fmt.Println(err)
+		context.Res.Write([]byte(util.ResultHandler(cons.Result.DBError, "insert db fail")))
 		return
 	}
 
-	context.Res.Write([]byte(util.ResultHandler(util.Result.Success, "")))
+	context.Res.Write([]byte(util.ResultHandler(cons.Result.Success, "")))
 
 }

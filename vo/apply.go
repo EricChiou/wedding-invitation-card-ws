@@ -1,4 +1,4 @@
-package apply
+package vo
 
 // Applicant struct
 type Applicant struct {

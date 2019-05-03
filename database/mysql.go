@@ -1,6 +1,8 @@
 package db
 
-import "database/sql"
+import (
+	"database/sql"
+)
 
 // MySQL mysql
 var MySQL *sql.DB
