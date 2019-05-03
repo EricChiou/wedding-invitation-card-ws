@@ -29,5 +29,5 @@ func main() {
 
 	// init http server
 	router.INIT(6200, nil)
-	router.RUN()
+	router.RUNSSL("server.crt", "server.key")
 }

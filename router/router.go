@@ -46,6 +46,20 @@ func RUN() {
 	}()
 }
 
+// RUNSSL server with ssl, pass server port you want to listen, default is 8080
+func RUNSSL(crt string, key string) {
+	router()
+	fmt.Println("start server at port " + strconv.Itoa(p))
+	if err := http.ListenAndServeTLS(":"+strconv.Itoa(p), crt, key, nil); err != nil {
+		panic(err)
+	}
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("start server error: ", err)
+		}
+	}()
+}
+
 // GET is use to build new GET API
 func GET(path string, run func(*Context)) {
 	if !checkPath("GET", path, get) {
