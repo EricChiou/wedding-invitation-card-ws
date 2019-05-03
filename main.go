@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"wedding-invitation-card-ws/util"
 
 	"./apply"
 	"./database"
 	"./router"
+	"./util"
 
 	_ "github.com/go-sql-driver/mysql"
 )

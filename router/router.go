@@ -216,26 +216,28 @@ func checkDuplicate(pathAry []string, targetPathAry []string) bool {
 
 func router() {
 	http.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
-		switch req.Method {
-		case "GET":
-			pathHandler(res, req, get)
-		case "POST":
-			pathHandler(res, req, post)
-		case "PUT":
-			pathHandler(res, req, put)
-		case "DELETE":
-			pathHandler(res, req, delete)
-		case "PATCH":
-			pathHandler(res, req, patch)
-		case "COPY":
-			pathHandler(res, req, copy)
-		case "HEAD":
-			pathHandler(res, req, head)
-		case "OPTIONS":
-			pathHandler(res, req, options)
-		default:
-			res.Write([]byte("404 page not found"))
-		}
+		res.Write([]byte("hello"))
+		return
+		// switch req.Method {
+		// case "GET":
+		// 	pathHandler(res, req, get)
+		// case "POST":
+		// 	pathHandler(res, req, post)
+		// case "PUT":
+		// 	pathHandler(res, req, put)
+		// case "DELETE":
+		// 	pathHandler(res, req, delete)
+		// case "PATCH":
+		// 	pathHandler(res, req, patch)
+		// case "COPY":
+		// 	pathHandler(res, req, copy)
+		// case "HEAD":
+		// 	pathHandler(res, req, head)
+		// case "OPTIONS":
+		// 	pathHandler(res, req, options)
+		// default:
+		// 	res.Write([]byte("404 page not found"))
+		// }
 	})
 }
 
