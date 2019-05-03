@@ -25,14 +25,9 @@ func main() {
 	}
 
 	// init api
-	router.GET("/helloWorld", helloWorld)
 	apply.INIT()
 
 	// init http server
 	router.INIT(6200, nil)
 	router.RUNSSL("server.crt", "server.key")
-}
-
-func helloWorld(context *router.Context) {
-	context.Res.Write([]byte("Hello World!!"))
 }
