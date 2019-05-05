@@ -50,7 +50,7 @@ func RUN() {
 func RUNSSL(crt string, key string) {
 	router()
 	fmt.Println("start server at port " + strconv.Itoa(p))
-	if err := http.ListenAndServeTLS(":"+strconv.Itoa(p), crt, key, nil); err != nil {
+	if err := http.ListenAndServeTLS(":"+strconv.Itoa(p), crt, key, h); err != nil {
 		panic(err)
 	}
 	defer func() {
@@ -216,6 +216,8 @@ func checkDuplicate(pathAry []string, targetPathAry []string) bool {
 
 func router() {
 	http.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
+		// res.Header().Set("Access-Control-Allow-Origin", "*")
+		res.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 		switch req.Method {
 		case "GET":
 			pathHandler(res, req, get)
