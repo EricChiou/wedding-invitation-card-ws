@@ -31,6 +31,10 @@ func main() {
 	// init api
 	router.INIT()
 
+	router.AddHeader("Access-Control-Allow-Origin", "https://www.calicomoo.ml")
+	router.AddHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	router.AddHeader("Access-Control-Allow-Headers", "Content-Type")
+
 	// start https server
 	fmt.Println("start server at port 6200")
 	err = http.ListenAndServeTLS(":6200", "/opt/ssl/crt.pem", "/opt/ssl/key.pem", nil)

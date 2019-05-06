@@ -6,7 +6,14 @@ import (
 	"strings"
 )
 
+var headerList *header
 var get, post, put, delete, patch, copy, head, options *pathElement
+
+type header struct {
+	key   string
+	value string
+	next  *header
+}
 
 type pathElement struct {
 	path []string
@@ -22,13 +29,20 @@ type Context struct {
 	Params map[string]string
 }
 
+// AddHeader add api response header
+func AddHeader(key string, value string) {
+	newHeader := header{key: key, value: value, next: headerList}
+	headerList = &newHeader
+}
+
 // INIT init api handler
 func INIT() {
 	http.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
-		res.Header().Set("Access-Control-Allow-Origin", "https://www.calicomoo.ml")
-		res.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-		res.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
+		h := headerList
+		for h != nil {
+			res.Header().Set(h.key, h.value)
+			h = h.next
+		}
 		switch req.Method {
 		case "GET":
 			pathHandler(res, req, get)
