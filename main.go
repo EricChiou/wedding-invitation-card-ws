@@ -6,10 +6,10 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
-	"./apply"
-	"./database"
-	"./router"
-	"./util"
+	"wedding-invitation-card-ws/apply"
+	"wedding-invitation-card-ws/database"
+	"wedding-invitation-card-ws/router"
+	"wedding-invitation-card-ws/util"
 )
 
 func main() {
