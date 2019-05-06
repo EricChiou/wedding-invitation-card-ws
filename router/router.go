@@ -25,7 +25,7 @@ type Context struct {
 // INIT init api handler
 func INIT() {
 	http.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
-		res.Header().Set("Access-Control-Allow-Origin", "https://www.calicomoo.ml, https://calicomoo.ml")
+		res.Header().Set("Access-Control-Allow-Origin", "https://www.calicomoo.ml")
 		res.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 		res.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
