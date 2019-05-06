@@ -22,6 +22,8 @@ func INIT() {
 }
 
 func add(context *router.Context) {
+	context.Res.Header().Set("Access-Control-Allow-Origin", "www.calicomoo.ml, calicomoo.ml")
+
 	body, err := ioutil.ReadAll(context.Req.Body)
 	defer context.Req.Body.Close()
 	if err != nil {
