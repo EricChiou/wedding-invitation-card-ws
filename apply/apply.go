@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"wedding-invitation-card-ws/constants"
-	"wedding-invitation-card-ws/database"
-	"wedding-invitation-card-ws/router"
-	"wedding-invitation-card-ws/util"
-	"wedding-invitation-card-ws/vo"
+	"../constants"
+	"../database"
+	"../router"
+	"../util"
+	"../vo"
 )
 
 // INIT initial api

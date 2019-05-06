@@ -29,8 +29,8 @@ type Context struct {
 	Params map[string]string
 }
 
-// AddHeader add api response header
-func AddHeader(key string, value string) {
+// SetHeader add api response header
+func SetHeader(key string, value string) {
 	newHeader := header{key: key, value: value, next: headerList}
 	headerList = &newHeader
 }

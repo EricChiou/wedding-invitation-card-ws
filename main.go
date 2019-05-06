@@ -6,10 +6,10 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
-	"wedding-invitation-card-ws/apply"
-	"wedding-invitation-card-ws/database"
-	"wedding-invitation-card-ws/router"
-	"wedding-invitation-card-ws/util"
+	"./apply"
+	"./database"
+	"./router"
+	"./util"
 )
 
 func main() {
@@ -31,9 +31,9 @@ func main() {
 	// init api
 	router.INIT()
 
-	router.AddHeader("Access-Control-Allow-Origin", "https://www.calicomoo.ml")
-	router.AddHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-	router.AddHeader("Access-Control-Allow-Headers", "Content-Type")
+	router.SetHeader("Access-Control-Allow-Origin", "https://www.calicomoo.ml")
+	router.SetHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	router.SetHeader("Access-Control-Allow-Headers", "Content-Type")
 
 	// start https server
 	fmt.Println("start server at port 6200")
