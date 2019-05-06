@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"fmt"
 	"net/http"
 
@@ -33,15 +34,21 @@ func main() {
 	// init api
 	router.INIT()
 
-	// start https server
-	http.Serve(autocert.NewListener("www.calicomoo.ml", "calicomoo.ml"), nil)
-	fmt.Println("start server at port 6200")
-	if err := http.ListenAndServeTLS(":6200", "", "", nil); err != nil {
-		panic(err)
+	// ssl setting
+	m := autocert.Manager{
+		Prompt:     autocert.AcceptTOS,
+		HostPolicy: autocert.HostWhitelist("www.calicomoo.ml", "calicomoo.ml"),
+		Cache:      autocert.DirCache("/opt/WS/ssl"),
 	}
-	defer func() {
-		if err := recover(); err != nil {
-			fmt.Println("start server error: ", err)
-		}
-	}()
+
+	// start https server
+	s := &http.Server{
+		Addr:      ":6200",
+		TLSConfig: &tls.Config{GetCertificate: m.GetCertificate},
+	}
+	fmt.Println("start server at port 6200")
+	err = s.ListenAndServeTLS("", "")
+	if err != nil {
+		fmt.Println("start server error: ", err)
+	}
 }
