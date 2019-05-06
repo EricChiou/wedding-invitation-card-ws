@@ -17,7 +17,7 @@ type pathElement struct {
 
 // Context is use to pass variables between middleware
 type Context struct {
-	Res    *http.ResponseWriter
+	Res    http.ResponseWriter
 	Req    *http.Request
 	Params map[string]string
 }
@@ -25,23 +25,27 @@ type Context struct {
 // INIT init api handler
 func INIT() {
 	http.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
+		res.Header().Set("Access-Control-Allow-Origin", "https://www.calicomoo.ml, https://calicomoo.ml")
+		res.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		res.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 		switch req.Method {
 		case "GET":
-			pathHandler(&res, req, get)
+			pathHandler(res, req, get)
 		case "POST":
-			pathHandler(&res, req, post)
+			pathHandler(res, req, post)
 		case "PUT":
-			pathHandler(&res, req, put)
+			pathHandler(res, req, put)
 		case "DELETE":
-			pathHandler(&res, req, delete)
+			pathHandler(res, req, delete)
 		case "PATCH":
-			pathHandler(&res, req, patch)
+			pathHandler(res, req, patch)
 		case "COPY":
-			pathHandler(&res, req, copy)
+			pathHandler(res, req, copy)
 		case "HEAD":
-			pathHandler(&res, req, head)
+			pathHandler(res, req, head)
 		case "OPTIONS":
-			pathHandler(&res, req, options)
+			pathHandler(res, req, options)
 		default:
 			res.Write([]byte("404 page not found"))
 		}
@@ -190,7 +194,7 @@ func checkDuplicate(pathAry []string, targetPathAry []string) bool {
 	return false
 }
 
-func pathHandler(res *http.ResponseWriter, req *http.Request, pathList *pathElement) {
+func pathHandler(res http.ResponseWriter, req *http.Request, pathList *pathElement) {
 	element := pathList
 	for element != nil {
 		match, params := mapping(req.URL.Path, element.path)
@@ -201,7 +205,7 @@ func pathHandler(res *http.ResponseWriter, req *http.Request, pathList *pathElem
 		}
 		element = element.next
 	}
-	(*res).Write([]byte("404 page not found"))
+	res.Write([]byte("404 page not found"))
 }
 
 func mapping(path string, targetPathAry []string) (bool, map[string]string) {
