@@ -3,13 +3,9 @@ package router
 import (
 	"fmt"
 	"net/http"
-	"os"
-	"strconv"
 	"strings"
 )
 
-var p = 8080
-var h http.Handler
 var get, post, put, delete, patch, copy, head, options *pathElement
 
 type pathElement struct {
@@ -21,43 +17,35 @@ type pathElement struct {
 
 // Context is use to pass variables between middleware
 type Context struct {
-	Req    *http.Request
 	Res    http.ResponseWriter
+	Req    *http.Request
 	Params map[string]string
 }
 
-// INIT is use to set server port, handler
-func INIT(port int, handler http.Handler) {
-	p = port
-	h = handler
-}
-
-// RUN server, pass server port you want to listen, default is 8080
-func RUN() {
-	router()
-	fmt.Println("start server at port " + strconv.Itoa(p))
-	if err := http.ListenAndServe(":"+strconv.Itoa(p), h); err != nil {
-		panic(err)
-	}
-	defer func() {
-		if err := recover(); err != nil {
-			fmt.Println("start server error: ", err)
+// INIT init api handler
+func INIT() {
+	http.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
+		switch req.Method {
+		case "GET":
+			pathHandler(res, req, get)
+		case "POST":
+			pathHandler(res, req, post)
+		case "PUT":
+			pathHandler(res, req, put)
+		case "DELETE":
+			pathHandler(res, req, delete)
+		case "PATCH":
+			pathHandler(res, req, patch)
+		case "COPY":
+			pathHandler(res, req, copy)
+		case "HEAD":
+			pathHandler(res, req, head)
+		case "OPTIONS":
+			pathHandler(res, req, options)
+		default:
+			res.Write([]byte("404 page not found"))
 		}
-	}()
-}
-
-// RUNSSL server with ssl, pass server port you want to listen, default is 8080
-func RUNSSL(crt string, key string) {
-	router()
-	fmt.Println("start server at port " + strconv.Itoa(p))
-	if err := http.ListenAndServeTLS(":"+strconv.Itoa(p), crt, key, h); err != nil {
-		panic(err)
-	}
-	defer func() {
-		if err := recover(); err != nil {
-			fmt.Println("start server error: ", err)
-		}
-	}()
+	})
 }
 
 // GET is use to build new GET API
@@ -156,18 +144,6 @@ func OPTIONS(path string, run func(*Context)) {
 	options = &element
 }
 
-func portHandler(port []string) string {
-	switch len(port) {
-	case 1:
-		return port[0]
-	default:
-		if port := os.Getenv("PORT"); port != "" {
-			return port
-		}
-		return "8080"
-	}
-}
-
 func checkPath(method string, path string, pathList *pathElement) bool {
 	// check path is valid
 	if len(path) == 0 || path[0:1] != "/" {
@@ -214,41 +190,13 @@ func checkDuplicate(pathAry []string, targetPathAry []string) bool {
 	return false
 }
 
-func router() {
-	http.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
-		res.Header().Set("Access-Control-Allow-Origin", "*")
-		res.Header().Add("Access-Control-Allow-Headers", "Content-Type")
-		res.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-		switch req.Method {
-		case "GET":
-			pathHandler(res, req, get)
-		case "POST":
-			pathHandler(res, req, post)
-		case "PUT":
-			pathHandler(res, req, put)
-		case "DELETE":
-			pathHandler(res, req, delete)
-		case "PATCH":
-			pathHandler(res, req, patch)
-		case "COPY":
-			pathHandler(res, req, copy)
-		case "HEAD":
-			pathHandler(res, req, head)
-		case "OPTIONS":
-			pathHandler(res, req, options)
-		default:
-			res.Write([]byte("404 page not found"))
-		}
-	})
-}
-
 func pathHandler(res http.ResponseWriter, req *http.Request, pathList *pathElement) {
 	element := pathList
 	for element != nil {
 		match, params := mapping(req.URL.Path, element.path)
 		if match {
 			run := *element.run
-			run(&Context{Req: req, Res: res, Params: params})
+			run(&Context{Res: res, Req: req, Params: params})
 			return
 		}
 		element = element.next
