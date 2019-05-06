@@ -1,7 +1,6 @@
 package main
 
 import (
-	"crypto/tls"
 	"fmt"
 	"net/http"
 
@@ -38,20 +37,24 @@ func main() {
 	// 	HostPolicy: autocert.HostWhitelist("www.calicomoo.ml", "calicomoo.ml"),
 	// 	Cache:      autocert.DirCache("/opt/WS/ssl"),
 	// }
-	cert, err := tls.LoadX509KeyPair("/opt/ssl/domain.crt", "/opt/ssl/domain.key")
-	if err != nil {
-		fmt.Println("LoadX509KeyPair error: ", err)
-		return
-	}
+	// cert, err := tls.LoadX509KeyPair("/opt/ssl/domain.crt", "/opt/ssl/domain.key")
+	// if err != nil {
+	// 	fmt.Println("LoadX509KeyPair error: ", err)
+	// 	return
+	// }
 
 	// start https server
-	s := &http.Server{
-		Addr: ":6200",
-		// TLSConfig: &tls.Config{GetCertificate: m.GetCertificate},
-		TLSConfig: &tls.Config{Certificates: []tls.Certificate{cert}},
-	}
 	fmt.Println("start server at port 6200")
-	err = s.ListenAndServeTLS("", "")
+	// s := &http.Server{
+	// 	Addr: ":6200",
+	// 	TLSConfig: &tls.Config{GetCertificate: m.GetCertificate},
+	// 	TLSConfig: &tls.Config{Certificates: []tls.Certificate{cert}},
+	// }
+	// err = s.ListenAndServeTLS("", "")
+	// if err != nil {
+	// 	fmt.Println("start server error: ", err)
+	// }
+	err = http.ListenAndServeTLS(":6200", "/opt/ssl/server.crt", "/opt/ssl/server.key", nil)
 	if err != nil {
 		fmt.Println("start server error: ", err)
 	}
