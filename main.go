@@ -54,7 +54,7 @@ func main() {
 	// if err != nil {
 	// 	fmt.Println("start server error: ", err)
 	// }
-	err = http.ListenAndServeTLS(":6200", "/opt/ssl/server.crt", "/opt/ssl/server.key", nil)
+	err = http.ListenAndServeTLS(":6200", "/opt/ssl/crt.pem", "/opt/ssl/key.pem", nil)
 	if err != nil {
 		fmt.Println("start server error: ", err)
 	}
