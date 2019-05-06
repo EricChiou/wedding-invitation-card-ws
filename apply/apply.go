@@ -22,41 +22,42 @@ func INIT() {
 }
 
 func add(context *router.Context) {
-	context.Res.Header().Set("Access-Control-Allow-Origin", "*")
-	context.Res.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	(*context.Res).Header().Set("Access-Control-Allow-Origin", "https://www.calicomoo.ml, https://calicomoo.ml")
+	(*context.Res).Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	(*context.Res).Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
 	body, err := ioutil.ReadAll(context.Req.Body)
 	defer context.Req.Body.Close()
 	if err != nil {
-		context.Res.Write([]byte(util.ResultHandler(cons.Result.FormatError, "no have req body")))
+		(*context.Res).Write([]byte(util.ResultHandler(cons.Result.FormatError, "no have req body")))
 		return
 	}
 
 	var applicant vo.Applicant
 	err = json.Unmarshal(body, &applicant)
 	if err != nil {
-		context.Res.Write([]byte(util.ResultHandler(cons.Result.FormatError, "json parser fail")))
+		(*context.Res).Write([]byte(util.ResultHandler(cons.Result.FormatError, "json parser fail")))
 		return
 	}
 
 	if len(applicant.Name) == 0 {
-		context.Res.Write([]byte(util.ResultHandler(cons.Result.FormatError, "沒輸入姓名")))
+		(*context.Res).Write([]byte(util.ResultHandler(cons.Result.FormatError, "沒輸入姓名")))
 		return
 	}
 	if applicant.Number <= 0 {
-		context.Res.Write([]byte(util.ResultHandler(cons.Result.FormatError, "沒輸入人數")))
+		(*context.Res).Write([]byte(util.ResultHandler(cons.Result.FormatError, "沒輸入人數")))
 		return
 	}
 	if len(applicant.Phone) == 0 && len(applicant.Email) == 0 && len(applicant.Line) == 0 {
-		context.Res.Write([]byte(util.ResultHandler(cons.Result.FormatError, "沒輸入聯絡方式")))
+		(*context.Res).Write([]byte(util.ResultHandler(cons.Result.FormatError, "沒輸入聯絡方式")))
 		return
 	}
 	if len(applicant.Relation) == 0 {
-		context.Res.Write([]byte(util.ResultHandler(cons.Result.FormatError, "沒輸入與新人關係")))
+		(*context.Res).Write([]byte(util.ResultHandler(cons.Result.FormatError, "沒輸入與新人關係")))
 		return
 	}
 	if applicant.Card && len(applicant.Address) == 0 {
-		context.Res.Write([]byte(util.ResultHandler(cons.Result.FormatError, "沒輸入寄送地址")))
+		(*context.Res).Write([]byte(util.ResultHandler(cons.Result.FormatError, "沒輸入寄送地址")))
 		return
 	}
 
@@ -73,10 +74,10 @@ func add(context *router.Context) {
 		applicant.Other)
 	if err != nil {
 		fmt.Println(err)
-		context.Res.Write([]byte(util.ResultHandler(cons.Result.DBError, "insert db fail")))
+		(*context.Res).Write([]byte(util.ResultHandler(cons.Result.DBError, "insert db fail")))
 		return
 	}
 
-	context.Res.Write([]byte(util.ResultHandler(cons.Result.Success, "")))
+	(*context.Res).Write([]byte(util.ResultHandler(cons.Result.Success, "")))
 
 }
