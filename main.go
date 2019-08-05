@@ -37,7 +37,7 @@ func main() {
 
 	// start https server
 	fmt.Println("start server at port 6200")
-	err = http.ListenAndServeTLS(":6200", "/opt/ssl/crt.pem", "/opt/ssl/key.pem", nil)
+	err = http.ListenAndServeTLS(":6200", "/etc/letsencrypt/live/www.calicomoo.ml/fullchain.pem", "/etc/letsencrypt/live/www.calicomoo.ml/privkey.pem", nil)
 	if err != nil {
 		fmt.Println("start server error: ", err)
 	}
