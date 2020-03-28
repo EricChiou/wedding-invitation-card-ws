@@ -7,7 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	"./apply"
-	"./database"
+	db "./database"
 	"./router"
 	"./util"
 )
@@ -31,13 +31,13 @@ func main() {
 	// init api
 	router.INIT()
 
-	router.SetHeader("Access-Control-Allow-Origin", "https://www.calicomoo.ml")
+	router.SetHeader("Access-Control-Allow-Origin", "https://www.calicomoomoo.ml")
 	router.SetHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 	router.SetHeader("Access-Control-Allow-Headers", "Content-Type")
 
 	// start https server
 	fmt.Println("start server at port 6200")
-	err = http.ListenAndServeTLS(":6200", "/etc/letsencrypt/live/www.calicomoomoo.ml/fullchain.pem", "/etc/letsencrypt/live/www.calicomoo.ml/privkey.pem", nil)
+	err = http.ListenAndServeTLS(":6200", "/etc/letsencrypt/live/www.calicomoomoo.ml/fullchain.pem", "/etc/letsencrypt/live/www.calicomoomoo.ml/privkey.pem", nil)
 	if err != nil {
 		fmt.Println("start server error: ", err)
 	}
